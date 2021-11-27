@@ -10,8 +10,6 @@ module StatefulModelRails
   class MissingStateDefinition < Error
     def initialize(missing_class_name)
       @missing_class_name = missing_class_name
-
-      super
     end
 
     def to_s
@@ -23,8 +21,6 @@ module StatefulModelRails
     def initialize(current_state, triggering_event)
       @current_state = current_state
       @triggering_event = triggering_event
-
-      super
     end
 
     def to_s
