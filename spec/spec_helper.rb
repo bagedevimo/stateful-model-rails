@@ -2,7 +2,7 @@
 
 require "bundler/setup"
 require "stateful_model_rails"
-require 'ruby_jard'
+require "ruby_jard"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
