@@ -93,7 +93,7 @@ def included__state
     sf.name == attributes["state"]
   end
 
-  raise StatefulModelRails::MissingStateDefinition.new, attributes["state"] if st.nil?
+  raise StatefulModelRails::MissingStateDefinition, attributes["state"] if st.nil?
 
   st
 end

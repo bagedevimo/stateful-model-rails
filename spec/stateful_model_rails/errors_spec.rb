@@ -51,4 +51,26 @@ RSpec.describe StatefulModelRails::StateMachine do
       end
     end
   end
+
+  describe "fetching the current state" do
+    let(:table) do
+      proc do
+        transition :example1, from: StateA, to: StateB
+      end
+    end
+
+    context "when the current state class exists" do
+      it "returns the state class" do
+        expect(inst.state).to eq(StateA)
+      end
+    end
+
+    context "when the current state class doesn't exist" do
+      let(:initial_state) { "DoesntExist" }
+
+      it "raises an exception" do
+        expect { inst.state }.to raise_error(StatefulModelRails::MissingStateDefinition)
+      end
+    end
+  end
 end
