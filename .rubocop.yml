@@ -21,7 +21,11 @@ RSpec/ExampleLength:
   Max: 25
 
 RSpec/MultipleExpectations:
-  Max: 6
+  Max: 10
+
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
 
 RSpec/ExpectChange:
   Enabled: false
@@ -45,4 +49,7 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 RSpec/FilePath:
+  Enabled: false
+
+RSpec/MessageSpies:
   Enabled: false
