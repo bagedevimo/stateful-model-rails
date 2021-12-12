@@ -31,4 +31,10 @@ module StatefulModelRails
       "There is no event #{@triggering_event} from #{@current_state}"
     end
   end
+
+  class DirtyModel < Error
+    def to_s
+      "There are unsaved changes to this record that would be override by doing a state machine transition"
+    end
+  end
 end

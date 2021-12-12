@@ -2,13 +2,53 @@
 
 module StatefulModelRails::StateMachine
   class State
-    def before_leave(_); end
+    class << self
+      attr_reader :before_leave_callbacks, :after_leave_callbacks, :before_enter_callbacks, :after_enter_callbacks
+    end
 
-    def after_leave(_); end
+    def self.before_leave(&block)
+      @before_leave_callbacks ||= []
+      @before_leave_callbacks << block
+    end
 
-    def before_enter(_); end
+    def self.after_leave(&block)
+      @after_leave_callbacks ||= []
+      @after_leave_callbacks << block
+    end
 
-    def after_enter(_); end
+    def self.before_enter(&block)
+      @before_enter_callbacks ||= []
+      @before_enter_callbacks << block
+    end
+
+    def self.after_enter(&block)
+      @after_enter_callbacks ||= []
+      @after_enter_callbacks << block
+    end
+
+    def run_before_leave(args)
+      return unless self.class.before_leave_callbacks
+
+      self.class.before_leave_callbacks.each { |b| b.call(args) }
+    end
+
+    def run_after_leave(args)
+      return unless self.class.after_leave_callbacks
+
+      self.class.after_leave_callbacks.each { |b| b.call(args) }
+    end
+
+    def run_before_enter(args)
+      return unless self.class.before_enter_callbacks
+
+      self.class.before_enter_callbacks.each { |b| b.call(args) }
+    end
+
+    def run_after_enter(args)
+      return unless self.class.after_enter_callbacks
+
+      self.class.after_enter_callbacks.each { |b| b.call(args) }
+    end
   end
 
   class StateMachineInternal
@@ -47,13 +87,13 @@ module StatefulModelRails::StateMachine
             from_state = matching_from.from.new
             to_state = matching_from.to.new
 
-            from_state.before_leave(self) if from_state.respond_to?(:before_leave)
-            to_state.before_enter(self) if to_state.respond_to?(:before_enter)
+            from_state.run_before_leave(self) if from_state.respond_to?(:run_before_leave)
+            to_state.run_before_enter(self) if to_state.respond_to?(:run_before_enter)
 
             update!(state: matching_from.to.name)
 
-            from_state.after_leave(self) if from_state.respond_to?(:after_leave)
-            to_state.after_enter(self) if to_state.respond_to?(:after_enter)
+            from_state.run_after_leave(self) if from_state.respond_to?(:run_after_leave)
+            to_state.run_after_enter(self) if to_state.respond_to?(:run_after_enter)
           end
         end
       end
