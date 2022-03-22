@@ -52,7 +52,7 @@ module StatefulModelRails::StateMachine
   end
 
   class StateMachineInternal
-    attr_reader :seen_states, :transition_map
+    attr_reader :seen_states, :transition_map, :field_name
 
     def initialize(field_name)
       @field_name = field_name
@@ -129,11 +129,13 @@ end
 
 def included__state
   sm_instance = self.class.state_machine_instance
+  field_name = sm_instance.field_name
+
   st = sm_instance.seen_states.detect do |sf|
-    sf.name == attributes["state"]
+    sf.name == attributes[field_name]
   end
 
-  raise StatefulModelRails::MissingStateDefinition, attributes["state"] if st.nil?
+  raise StatefulModelRails::MissingStateDefinition, attributes[field_name] if st.nil?
 
   st
 end
