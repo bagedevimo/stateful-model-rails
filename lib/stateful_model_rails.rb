@@ -4,6 +4,8 @@ require "stateful_model_rails/version"
 require "stateful_model_rails/state_machine"
 require "stateful_model_rails/transition"
 
+require "active_support/core_ext/string/inflections"
+
 module StatefulModelRails
   class Error < StandardError; end
 
