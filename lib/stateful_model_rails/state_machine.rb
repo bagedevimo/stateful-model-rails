@@ -118,8 +118,8 @@ module StatefulModelRails::StateMachine
   end
 end
 
-def included__state_machine(opts, &block)
-  field_name = opts.fetch(:on, "state")
+def included__state_machine(opts = {}, &block)
+  field_name = opts.fetch(:on, "state").to_s
 
   @state_machine = StatefulModelRails::StateMachine::StateMachineInternal.new(field_name)
   @state_machine.instance_eval(&block)
