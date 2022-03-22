@@ -90,7 +90,7 @@ module StatefulModelRails::StateMachine
             from_state.run_before_leave(self) if from_state.respond_to?(:run_before_leave)
             to_state.run_before_enter(self) if to_state.respond_to?(:run_before_enter)
 
-            update!(state: matching_from.to.name)
+            update!(self.class.state_machine_instance.field_name.to_sym => matching_from.to.name)
 
             from_state.run_after_leave(self) if from_state.respond_to?(:run_after_leave)
             to_state.run_after_enter(self) if to_state.respond_to?(:run_after_enter)
