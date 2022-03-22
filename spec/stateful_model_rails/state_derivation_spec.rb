@@ -23,6 +23,13 @@ RSpec.describe StatefulModelRails::StateMachine do
 
         expect(instance.state).to eq(StateA)
       end
+
+      it "is case-insensitive" do
+        instance = effective_class.new
+        allow(instance).to receive(:attributes).and_return({ "state" => "state_a" })
+
+        expect(instance.state).to eq(StateA)
+      end
     end
 
     context "when configuring the `on` field" do

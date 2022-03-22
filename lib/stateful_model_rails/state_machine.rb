@@ -132,7 +132,7 @@ def included__state
   field_name = sm_instance.field_name
 
   st = sm_instance.seen_states.detect do |sf|
-    sf.name == attributes[field_name]
+    sf.name.underscore == attributes[field_name].underscore
   end
 
   raise StatefulModelRails::MissingStateDefinition, attributes[field_name] if st.nil?
