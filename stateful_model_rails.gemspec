@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://github.com/bagedevimo/stateful-model-rails"
   spec.metadata["changelog_uri"] = "https://github.com/bagedevimo/stateful-model-rails"
 
-  spec.add_runtime_dependency "activerecord", ">= 5.0.0"
-  spec.add_runtime_dependency "activesupport", ">= 5.0.0"
+  spec.add_runtime_dependency "activerecord", ">= 5.2.0"
+  spec.add_runtime_dependency "activesupport", ">= 5.2.0"
 
   spec.files = Dir["lib/**/*"]
   spec.bindir        = "bin"

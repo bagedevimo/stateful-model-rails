@@ -77,23 +77,25 @@ module StatefulModelRails::StateMachine
 
         base.instance_eval do
           define_method(event) do
-            matching_froms = fromtos.select { |fr| fr.from == state }
+            with_lock do
+              matching_froms = fromtos.select { |fr| fr.from == state }
 
-            raise TooManyDestinationStates if matching_froms.length > 1
-            raise StatefulModelRails::NoMatchingTransition.new(state.name, event.to_s) if matching_froms.empty?
+              raise TooManyDestinationStates if matching_froms.length > 1
+              raise StatefulModelRails::NoMatchingTransition.new(state.name, event.to_s) if matching_froms.empty?
 
-            matching_from = matching_froms[0]
+              matching_from = matching_froms[0]
 
-            from_state = matching_from.from.new
-            to_state = matching_from.to.new
+              from_state = matching_from.from.new
+              to_state = matching_from.to.new
 
-            from_state.run_before_leave(self) if from_state.respond_to?(:run_before_leave)
-            to_state.run_before_enter(self) if to_state.respond_to?(:run_before_enter)
+              from_state.run_before_leave(self) if from_state.respond_to?(:run_before_leave)
+              to_state.run_before_enter(self) if to_state.respond_to?(:run_before_enter)
 
-            update!(self.class.state_machine_instance.field_name.to_sym => matching_from.to.name)
+              update!(self.class.state_machine_instance.field_name.to_sym => matching_from.to.name)
 
-            from_state.run_after_leave(self) if from_state.respond_to?(:run_after_leave)
-            to_state.run_after_enter(self) if to_state.respond_to?(:run_after_enter)
+              from_state.run_after_leave(self) if from_state.respond_to?(:run_after_leave)
+              to_state.run_after_enter(self) if to_state.respond_to?(:run_after_enter)
+            end
           end
         end
       end
