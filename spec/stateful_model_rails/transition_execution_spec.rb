@@ -56,6 +56,43 @@ RSpec.describe StatefulModelRails::StateMachine do
     end
   end
 
+  context "with a configured `field_name`" do
+    def build_classdef(block)
+      Class.new do
+        def initialize(initial_state)
+          @field_name = initial_state
+        end
+
+        def update!(field_name:)
+          @field_name = field_name
+        end
+
+        def attributes
+          { "field_name" => @field_name }
+        end
+
+        include StatefulModelRails::StateMachine
+
+        state_machine(on: :field_name, &block)
+      end
+    end
+
+    let(:table) do
+      proc do
+        transition :example1, from: StateA, to: StateB
+      end
+    end
+
+    context "when in the initial default state" do
+      it "transitions" do
+        expect { inst.example1 }
+          .to change { inst.state }
+          .from(StateA)
+          .to(StateB)
+      end
+    end
+  end
+
   context "with two transitions, both seperate events, same src & dst" do
     let(:table) do
       proc do
