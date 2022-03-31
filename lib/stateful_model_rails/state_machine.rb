@@ -62,9 +62,12 @@ module StatefulModelRails::StateMachine
 
     def transition(event, from:, to:)
       @transition_map[event] ||= []
-      @transition_map[event] << StatefulModelRails::Transition.new(from, to)
+      Array(from).each do |from|
+        @transition_map[event] << StatefulModelRails::Transition.new(from, to)
 
-      @seen_states << from
+        @seen_states << from
+      end
+
       @seen_states << to
       @seen_states.uniq!
     end
