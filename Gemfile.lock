@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     stateful_model_rails (0.1.0)
-      activerecord (>= 5.0.0)
-      activesupport (>= 5.0.0)
+      activerecord (>= 5.2.0)
+      activesupport (>= 5.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -79,8 +79,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (>= 5.0.0)
-  activesupport (>= 5.0.0)
   rake (~> 12.0)
   rspec (~> 3.0)
   rubocop (~> 1.22)
