@@ -83,6 +83,25 @@ RSpec.describe StatefulModelRails::StateMachine do
       end
     end
 
+    context "with one multi-source transition" do
+      let(:table) do
+        proc do
+          transition :example1, from: [StateA, StateB], to: StateC
+        end
+      end
+
+      it "returns a transition table that expands the sources" do
+        expect(graph.keys).to match_array([:example1])
+
+        expect(graph[:example1]).to match_array(
+          [
+            StatefulModelRails::Transition.new(StateA, StateC),
+            StatefulModelRails::Transition.new(StateB, StateC)
+          ]
+        )
+      end
+    end
+
     context "with two transitions, same events different states, looped" do
       let(:table) do
         proc do

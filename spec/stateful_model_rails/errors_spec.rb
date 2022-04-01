@@ -20,6 +20,10 @@ RSpec.describe StatefulModelRails::StateMachine do
         @state = state
       end
 
+      def with_lock
+        yield if block_given?
+      end
+
       def attributes
         { "state" => @state }
       end
