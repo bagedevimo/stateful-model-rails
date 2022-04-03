@@ -21,14 +21,14 @@ RSpec.describe StatefulModelRails::StateMachine do
         instance = effective_class.new
         allow(instance).to receive(:attributes).and_return({ "state" => "StateA" })
 
-        expect(instance.state).to eq(StateA)
+        expect(instance.state).to be_a(StateA)
       end
 
       it "is case-insensitive" do
         instance = effective_class.new
         allow(instance).to receive(:attributes).and_return({ "state" => "state_a" })
 
-        expect(instance.state).to eq(StateA)
+        expect(instance.state).to be_a(StateA)
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe StatefulModelRails::StateMachine do
         instance = effective_class.new
         allow(instance).to receive(:attributes).and_return({ "other_field" => "StateA" })
 
-        expect(instance.state).to eq(StateA)
+        expect(instance.state).to be_a(StateA)
       end
     end
   end

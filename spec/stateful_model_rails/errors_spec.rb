@@ -65,7 +65,7 @@ RSpec.describe StatefulModelRails::StateMachine do
 
     context "when the current state class exists" do
       it "returns the state class" do
-        expect(inst.state).to eq(StateA)
+        expect(inst.state).to be_a(StateA)
       end
     end
 
