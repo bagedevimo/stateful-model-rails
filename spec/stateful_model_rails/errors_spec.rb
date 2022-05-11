@@ -45,12 +45,9 @@ RSpec.describe StatefulModelRails::StateMachine do
       context "when in a deadend state" do
         let(:initial_state) { "StateB" }
 
-        it "raises a no existing transition exception" do
+        it "does nothing" do
           expect { inst.example1 }
-            .to raise_error(
-              StatefulModelRails::NoMatchingTransition,
-              "There is no event example1 from StateB"
-            )
+            .to_not change { inst.state.class }
         end
       end
     end

@@ -94,7 +94,12 @@ module StatefulModelRails::StateMachine
               matching_froms = fromtos.select { |fr| fr.from == state.class }
 
               raise TooManyDestinationStates if matching_froms.length > 1
-              raise StatefulModelRails::NoMatchingTransition.new(state.name, event.to_s) if matching_froms.empty?
+
+              if matching_froms.empty?
+                return if fromtos.any? { |tr| tr.to == state.class }
+
+                raise StatefulModelRails::NoMatchingTransition.new(state.name, event.to_s)
+              end
 
               matching_from = matching_froms[0]
 

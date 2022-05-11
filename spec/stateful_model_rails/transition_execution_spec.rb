@@ -53,9 +53,9 @@ RSpec.describe StatefulModelRails::StateMachine do
     context "when in a deadend state" do
       let(:initial_state) { "StateB" }
 
-      it "raises no existing transition" do
+      it "does nothing" do
         expect { inst.example1 }
-          .to raise_error(StatefulModelRails::NoMatchingTransition)
+          .to_not change { inst.state.class }
       end
     end
   end
@@ -129,6 +129,7 @@ RSpec.describe StatefulModelRails::StateMachine do
       proc do
         transition :example1, from: StateA, to: StateB
         transition :example1, from: StateC, to: StateB
+        transition :example2, from: StateB, to: StateC
       end
     end
 
@@ -143,11 +144,11 @@ RSpec.describe StatefulModelRails::StateMachine do
       end
     end
 
-    context "when in B, receiving example1" do
-      let(:initial_state) { "StateB" }
+    context "when in A, receiving example2" do
+      let(:initial_state) { "StateA" }
 
       it "raises an error" do
-        expect { inst.example1 }
+        expect { inst.example2 }
           .to raise_error(StatefulModelRails::NoMatchingTransition)
       end
     end
