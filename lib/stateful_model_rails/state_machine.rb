@@ -35,25 +35,25 @@ module StatefulModelRails::StateMachine
     def run_before_leave
       return unless self.class.before_leave_callbacks
 
-      self.class.before_leave_callbacks.each { |b| b.call(self) }
+      self.class.before_leave_callbacks.each { |b| parent.instance_exec(self, &b) }
     end
 
     def run_after_leave
       return unless self.class.after_leave_callbacks
 
-      self.class.after_leave_callbacks.each { |b| b.call(self) }
+      self.class.after_leave_callbacks.each { |b| parent.instance_exec(self, &b) }
     end
 
     def run_before_enter
       return unless self.class.before_enter_callbacks
 
-      self.class.before_enter_callbacks.each { |b| b.call(self) }
+      self.class.before_enter_callbacks.each { |b| parent.instance_exec(self, &b) }
     end
 
     def run_after_enter
       return unless self.class.after_enter_callbacks
 
-      self.class.after_enter_callbacks.each { |b| b.call(self) }
+      self.class.after_enter_callbacks.each { |b| parent.instance_exec(self, &b) }
     end
 
     def name
