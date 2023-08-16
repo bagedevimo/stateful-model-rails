@@ -62,12 +62,13 @@ module StatefulModelRails::StateMachine
   end
 
   class StateMachineInternal
-    attr_reader :seen_states, :transition_map, :field_name
+    attr_reader :seen_states, :transition_map, :transition_callback, :field_name
 
     def initialize(field_name)
       @field_name = field_name
       @seen_states = []
       @transition_map = {}
+      @transition_callback = nil
     end
 
     def transition(event, from:, to:)
@@ -82,6 +83,10 @@ module StatefulModelRails::StateMachine
       @seen_states.uniq!
     end
 
+    def record_transition_with(&block)
+      @transition_callback = block
+    end
+
     def install_event_helpers!(base)
       events = @transition_map.keys
 
@@ -89,7 +94,7 @@ module StatefulModelRails::StateMachine
         fromtos = @transition_map[event]
 
         base.instance_eval do
-          define_method(event) do
+          define_method(event) do |**kwargs|
             with_lock do
               matching_froms = fromtos.select { |fr| fr.from == state.class }
 
@@ -105,6 +110,7 @@ module StatefulModelRails::StateMachine
               to_state.run_before_enter if to_state.respond_to?(:run_before_enter)
 
               update!(self.class.state_machine_instance.field_name.to_sym => matching_from.to.name)
+              self.class.state_machine_instance.transition_callback&.call(matching_from.from.name, matching_from.to.name, **kwargs)
 
               from_state.run_after_leave if from_state.respond_to?(:run_after_leave)
               to_state.run_after_enter if to_state.respond_to?(:run_after_enter)
@@ -133,11 +139,11 @@ module StatefulModelRails::StateMachine
   end
 end
 
-def included__state_machine(opts = {}, &block)
+def included__state_machine(opts = {}, &)
   field_name = opts.fetch(:on, "state").to_s
 
   @state_machine = StatefulModelRails::StateMachine::StateMachineInternal.new(field_name)
-  @state_machine.instance_eval(&block)
+  @state_machine.instance_eval(&)
   @state_machine.install_event_helpers!(self)
   @state_machine
 end
