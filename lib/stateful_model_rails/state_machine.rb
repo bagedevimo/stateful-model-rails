@@ -110,7 +110,7 @@ module StatefulModelRails::StateMachine
               to_state.run_before_enter if to_state.respond_to?(:run_before_enter)
 
               update!(self.class.state_machine_instance.field_name.to_sym => matching_from.to.name)
-              self.class.state_machine_instance.transition_callback&.call(matching_from.from.name, matching_from.to.name, **kwargs)
+              self.class.state_machine_instance.transition_callback&.call(self, matching_from.from.name, matching_from.to.name, **kwargs)
 
               from_state.run_after_leave if from_state.respond_to?(:run_after_leave)
               to_state.run_after_enter if to_state.respond_to?(:run_after_enter)

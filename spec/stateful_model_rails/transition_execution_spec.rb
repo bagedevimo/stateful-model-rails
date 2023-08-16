@@ -75,13 +75,13 @@ RSpec.describe StatefulModelRails::StateMachine do
       end
 
       it "calls the the transition callback" do
-        expect(fake_block).to receive(:call).with("StateA", "StateB")
+        expect(fake_block).to receive(:call).with(inst, "StateA", "StateB")
 
         inst.example1
       end
 
       it "passes any extra data" do
-        expect(fake_block).to receive(:call).with("StateA", "StateB", actor: "boopy")
+        expect(fake_block).to receive(:call).with(inst, "StateA", "StateB", actor: "boopy")
 
         inst.example1(actor: "boopy")
       end
