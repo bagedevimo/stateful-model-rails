@@ -58,6 +58,34 @@ RSpec.describe StatefulModelRails::StateMachine do
           .to raise_error(StatefulModelRails::NoMatchingTransition)
       end
     end
+
+    context "with transition recording" do
+      let(:fake_block) { instance_double(Proc) }
+
+      let(:table) do
+        fake_block_ref = fake_block
+
+        proc do
+          transition :example1, from: StateA, to: StateB
+
+          record_transition_with do |*args, **kwargs|
+            fake_block_ref.call(*args, **kwargs)
+          end
+        end
+      end
+
+      it "calls the the transition callback" do
+        expect(fake_block).to receive(:call).with("StateA", "StateB")
+
+        inst.example1
+      end
+
+      it "passes any extra data" do
+        expect(fake_block).to receive(:call).with("StateA", "StateB", actor: "boopy")
+
+        inst.example1(actor: "boopy")
+      end
+    end
   end
 
   context "with a configured `field_name`" do
